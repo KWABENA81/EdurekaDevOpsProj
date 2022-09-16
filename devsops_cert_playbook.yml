@@ -1,28 +1,12 @@
-
----
-- name: Ansible pull tomcat docker image for deployment
-- hosts: webservers
-  remote_user: ec2-user
-  become: true
-    package_facts:
-        manager: auto
-        
-  - name: "Docker Installing"
+- hosts: webserver
+  tasks:
+  - name: Docker Installing
     command: "yum install docker-ce --nobest -y"
     when: "'docker-ce' not in ansible_facts.package"
 
 
-- name: "Pull tomcat image"
-  community.general.docker_image:
-        name: kwabena81/tomcat-image
-        source: pull
+  - name: "Pull tomcat image"
+    docker_image:
+      name: kwabena81/tomcat-image
+      source: pull
 
-- name: "launch docker container"
-  docker_container:
-    name: sas-tomcat
-    image: tomcat-image
-    state: started
-    detach: true
-    interactive: true
-    ports:
-        - "8082:8082"
