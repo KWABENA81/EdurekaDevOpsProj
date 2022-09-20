@@ -1,0 +1,86 @@
+pipeline {
+    
+    tools {
+        jdk 'myjava'
+        maven 'mymaven'
+    }
+    
+    agent any
+    
+    environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub-credential')
+	}
+     
+    stages {
+        
+        stage ('#1 Clone Repository') {
+            
+            steps {
+                git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+            }
+        }
+        
+        stage ('#2 Compile ') {
+            
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        
+         stage ('#3 UnitTest ') {
+            
+            steps {
+                sh 'mvn test'
+            }
+        }
+        
+        stage ('#4 Package ') {
+            
+            steps {
+                sh 'mvn package'
+            }
+        }
+        
+        stage ('#5 Create Dockerfile') {
+            steps {
+            
+                sh 'cp /var/lib/jenkins/workspace/DevOps_CertCode/target/addressbook.war . '
+                sh 'touch Dockerfile'
+                
+                sh 'echo "FROM tomcat:9" > Dockerfile '
+                
+                sh 'echo "LABEL maintainer: \"kwabena81@yahoo.com\"" >> Dockerfile '
+                
+                sh 'echo "ADD addressbook.war /usr/local/tomcat/webapps/ " >> Dockerfile '
+                
+                sh 'echo "COPY . /usr/local/tomcat/ " >> Dockerfile '
+                
+            }
+            
+        }
+            
+        stage('#6 Docker Build') {
+            steps {
+                sh 'sudo docker build -t kwabena81/tomcat-image:0.1 .'
+            }
+		}
+		    
+		stage('#7 Docker Hub Login') {
+            steps {
+			    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+		    }
+		}
+		    
+		stage('#8 Docker Hub Push') {
+    	    steps {
+			    sh 'sudo docker push kwabena81/tomcat-image:0.1'
+		    }   
+	    }
+    }
+    
+    post {
+	    always {
+	        sh 'sudo docker logout '
+	    }
+	 }
+}
