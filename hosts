@@ -1,0 +1,11 @@
+[all:vars]
+#ansible_connection=ssh
+#ansible_port=22
+#ansible_ssh_user=provision
+#ansible_ssh_pass=provision
+#ansible_user_pass='$6$hmgteFNLkTP4/2PP$YWLtDgaafVcFg8AxEA0zp/heJRoCrF0xYTj5p8hAAKJEetD8gpe6j10EiCwXs7OYiI.eUIFuLxZyzhSBB3/ET0'
+ansible_python_interpreter=/usr/bin/python3
+
+[ubuntuvms]
+#server1 ansible_host=192.168.2.156 ansible_ssh_user=provision ansible_ssh_pass=provision  # sask-VirtualBox
+server2 ansible_host=192.168.2.159 ansible_ssh_user=provision ansible_ssh_pass=provision  
