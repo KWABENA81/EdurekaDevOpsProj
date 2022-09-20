@@ -53,15 +53,15 @@ pipeline {
                 
                 sh 'echo "ADD addressbook.war /usr/local/tomcat/webapps/ " >> Dockerfile '
                 
-                sh 'echo "EXPOSE 8082 " >> Dockerfile '
-                 
+                sh 'echo "COPY . /usr/local/tomcat/ " >> Dockerfile '
+                
             }
             
         }
             
         stage('#6 Docker Build') {
             steps {
-                sh 'sudo docker build -t kwabena81/tomcat-image .'
+                sh 'sudo docker build -t kwabena81/tomcat-image:0.1 .'
             }
 		}
 		    
@@ -73,7 +73,7 @@ pipeline {
 		    
 		stage('#8 Docker Hub Push') {
     	    steps {
-			    sh 'sudo docker push kwabena81/tomcat-image'
+			    sh 'sudo docker push kwabena81/tomcat-image:0.1'
 		    }   
 	    }
     }

@@ -1,0 +1,13 @@
+# Main playbook for tomcat pull & deploy
+---
+- hosts: ubuntuvms  #  set for local ubuntu VMs
+  become: true
+  #  Ansible defined tasks to perform
+  tasks:
+    #  pull image from docker hub
+    - name: Deploy image
+      docker_image:
+        name: kwabena81/tomcat-image:0.1
+        source: pull
+
+
